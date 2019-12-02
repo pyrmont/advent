@@ -1,4 +1,5 @@
-(ns aoc2019.day1)
+(ns aoc2019.day1
+  (:require [clojure.string]))
 
 (def input (-> (slurp "src/aoc2019/day1.txt")
                (clojure.string/split-lines)))
