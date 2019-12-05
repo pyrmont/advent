@@ -61,17 +61,17 @@
 
 (defn exec
   ([program in]
-   (exec program 0 in nil))
-  ([program pos in out]
-   (if-let [[new-program new-pos in out] (step program pos in)]
-     ; (let [keep-out (if (nil? new-out) out new-out)]
-     (recur new-program new-pos in out)
-     [program out])))
+   (exec program 0 in nil []))
+  ([program pos in out outs]
+   (let [new-outs (if (nil? out) outs (conj outs out))]
+     (if-let [[new-program new-pos in out] (step program pos in)]
+       (recur new-program new-pos in out new-outs)
+       [program new-outs]))))
 
-(def answer1 (get (exec the-program 1) 1))
+(def answer1 (-> the-program (exec 1) (get 1) (last)))
 
 (defn correct? [program noun verb answer]
   (let [in (assoc program 1 noun 2 verb)]
     (= answer (get (exec in) 0))))
 
-(def answer2 (get (exec the-program 5) 1))
+(def answer2 (-> the-program (exec 5) (get 1) (last)))
