@@ -119,8 +119,6 @@
                             (first)))
                   (apply max)))
 
-; (def answer1 (->> (permutations #{0 1 2 3 4}) (map #(chain the-program %)) (apply max)))
-
 (def t1-program [3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0])
 (def t1-phases [4,3,2,1,0])
 (def t2-program [3,23,3,24,1002,24,10,24,1002,23,-1,23,
@@ -135,21 +133,3 @@
       (schedule (queue [0]) (queue) false)
       (first)
       (first)))
-
-; (defn collect-signal [program start phases]
-;   (let [in (async/chan)
-;         out (async/chan)]
-;     (make-and-connect program in out phases)
-;     (write-output in start)
-;     (async/poll! out)))
-
-; (defn collect-signals [program permutations]
-;   (map (fn [x]
-;          (let [in (async/chan)
-;                out (async/chan)]
-;            (make-and-connect program in out x)
-;            (write-output in 0)
-;            (async/<!! out)))
-;        permutations))
-
-; (def answer1 (->> (permutations #{0 1 2 3 4}) (map #(make-and-connect the-program input-1 output-1 %)) (apply max)))
