@@ -85,19 +85,14 @@
           asteroids))
 
 (def the-asteroids (-> the-input get-asteroids))
-(def the-base (reduce (fn [best a]
-                        (let [curr {:coords a :visibles (get-visibles the-asteroids a)}]
-                          (if (< (count (:visibles best)) (count (:visibles curr))) curr best)))
-                      {:coords nil :visibles #{}}
-                      the-asteroids))
+(def the-base (find-base the-asteroids))
 (def answer1 (count (:visibles the-base)))
 
 (defn get-angle [origin a]
   (Math/atan2 (- (:x a) (:x origin)) (- (:y a) (:y origin))))
 
 (defn earlier? [origin a b]
-  (let [two-pi (* Math/PI 2)
-        a-angle (get-angle origin a)
+  (let [a-angle (get-angle origin a)
         b-angle (get-angle origin b)]
     (cond
       (= 0 a-angle) -1
