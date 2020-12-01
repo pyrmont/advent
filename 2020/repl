@@ -1,0 +1,4 @@
+#!/usr/bin/env janet
+
+(import modules/spork/netrepl)
+(netrepl/server)
