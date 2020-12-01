@@ -5,16 +5,19 @@
 
 # Part 1
 
-(each entry-1 expenses
-  (each entry-2 expenses
-    (when (= 2020 (+ entry-1 entry-2))
-      (print (* entry-1 entry-2)))))
+(->> (seq [x :in expenses
+           y :in expenses :when (= 2020 (+ x y))]
+       [x y])
+     first
+     (apply *)
+     print)
 
 # Part 2
 
-(each entry-1 expenses
-  (each entry-2 expenses
-    (each entry-3 expenses
-      (when (= 2020 (+ entry-1 entry-2 entry-3))
-        (print (* entry-1 entry-2 entry-3))))))
-
+(->> (seq [x :in expenses
+           y :in expenses
+           z :in expenses :when (= 2020 (+ x y z))]
+       [x y z])
+     first
+     (apply *)
+     print)
