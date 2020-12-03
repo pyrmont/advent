@@ -1,4 +1,9 @@
 #!/usr/bin/env janet
 
+(defn env-f [name stream]
+  (let [e (make-env)]
+    (put e :syspath "modules")
+    (put e :pretty-format "%.20M")))
+
 (import modules/spork/netrepl)
-(netrepl/server)
+(netrepl/server "127.0.0.1" "9365" env-f)
