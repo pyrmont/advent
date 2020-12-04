@@ -1,19 +1,46 @@
 (import spork/misc :as spork)
 
+(defn check-byr [s]
+  (<= 1920 (scan-number s) 2002))
+
+(defn check-iyr [s]
+  (<= 2010 (scan-number s) 2020))
+
+(defn check-eyr [s]
+  (<= 2020 (scan-number s) 2030))
+
+(defn check-hgt [s-h s-u]
+  (case s-u
+    "cm" (<= 150 (scan-number s-h) 193)
+    "in" (<= 59 (scan-number s-h) 76)))
+
+(def passport-grammar-strict
+  (peg/compile
+    ~{:ws  (+ "\n" " ")
+      :byr (* (/ (<- "byr") ,keyword) ":" (cmt (<- (repeat 4 :d)) ,check-byr))
+      :iyr (* (/ (<- "iyr") ,keyword) ":" (cmt (<- (repeat 4 :d)) ,check-iyr))
+      :eyr (* (/ (<- "eyr") ,keyword) ":" (cmt (<- (repeat 4 :d)) ,check-eyr))
+      :hgt (* (/ (<- "hgt") ,keyword) ":" (cmt (* (<- :d+) (<- (+ "cm" "in"))) ,check-hgt))
+      :hcl (* (/ (<- "hcl") ,keyword) ":" (<- (* "#" (repeat 6 (+ (range "09") (range "af"))))))
+      :ecl (* (/ (<- "ecl") ,keyword) ":" (<- (+ "amb" "blu" "brn" "gry" "grn" "hzl" "oth")))
+      :pid (* (/ (<- "pid") ,keyword) ":" (<- (repeat 9 :d)))
+      :cid (* (/ (<- "cid") ,keyword) ":" (<- (some :S)))
+      :main (/ (some (+ :ws :byr :iyr :eyr :hgt :hcl :ecl :pid :cid)) ,struct)}))
+
 (def passport-grammar
   (peg/compile
     ~{:ws  (+ "\n" " ")
-      :ecl (* (/ (<- "ecl") ,keyword) ":" (<- (some :S)))
-      :pid (* (/ (<- "pid") ,keyword) ":" (<- (some :S)))
-      :eyr (* (/ (<- "eyr") ,keyword) ":" (<- (some :S)))
-      :hcl (* (/ (<- "hcl") ,keyword) ":" (<- (some :S)))
       :byr (* (/ (<- "byr") ,keyword) ":" (<- (some :S)))
       :iyr (* (/ (<- "iyr") ,keyword) ":" (<- (some :S)))
-      :cid (* (/ (<- "cid") ,keyword) ":" (<- (some :S)))
+      :eyr (* (/ (<- "eyr") ,keyword) ":" (<- (some :S)))
       :hgt (* (/ (<- "hgt") ,keyword) ":" (<- (some :S)))
-      :main (some (+ :ws :ecl :pid :eyr :hcl :byr :iyr :cid :hgt))}))
+      :hcl (* (/ (<- "hcl") ,keyword) ":" (<- (some :S)))
+      :ecl (* (/ (<- "ecl") ,keyword) ":" (<- (some :S)))
+      :pid (* (/ (<- "pid") ,keyword) ":" (<- (some :S)))
+      :cid (* (/ (<- "cid") ,keyword) ":" (<- (some :S)))
+      :main (/ (some (+ :ws :byr :iyr :eyr :hgt :hcl :ecl :pid :cid)) ,struct)}))
 
-(defn validate-lax [d]
+(defn validate [d]
    (and (struct? d)
         (d :ecl)
         (d :pid)
@@ -22,35 +49,6 @@
         (d :byr)
         (d :iyr)
         (d :hgt)))
-
-(defn check-year [s [min-y max-y]]
-  (def y (scan-number s))
-  (and y (>= y min-y) (<= y max-y)))
-
-(defn check-hgt [s [min-cm max-cm] [min-in max-in]]
-  (def h-cm (-?> (peg/match '(* (<- :d+) "cm" -1) s) first scan-number))
-  (def h-in (-?> (peg/match '(* (<- :d+) "in" -1) s) first scan-number))
-  (or (and h-cm (>= h-cm min-cm) (<= h-cm max-cm))
-      (and h-in (>= h-in min-in) (<= h-in max-in))))
-
-(defn check-hcl [s]
-  (peg/match '(* "#" (repeat 6 (+ :d (range "af"))) -1) s))
-
-(defn check-ecl [s]
-  (peg/match '(* (+ "amb" "blu" "brn" "gry" "grn" "hzl" "oth") -1) s))
-
-(defn check-pid [s]
-  (peg/match '(* (repeat 9 :d) -1) s))
-
-(defn validate-strict [d]
-  (and (validate-lax d)
-       (-> (d :byr) (check-year [1920 2002]))
-       (-> (d :iyr) (check-year [2010 2020]))
-       (-> (d :eyr) (check-year [2020 2030]))
-       (-> (d :hgt) (check-hgt [150 193] [59 76]))
-       (-> (d :hcl) (check-hcl))
-       (-> (d :ecl) (check-ecl))
-       (-> (d :pid) (check-pid))))
 
 # Example
 
@@ -73,13 +71,11 @@
     ```
     spork/dedent
     string/trim
-    (string/split "\n\n")
-    (map |(as-> $ x
-                (peg/match passport-grammar x)
-                (struct (splice x))))))
+    (string/split "\n\n")))
 
 (def example-answer
-  (count validate-lax example))
+  (->> (mapcat |(peg/match passport-grammar $) example)
+       (count validate)))
 
 (print example-answer " valid documents")
 
@@ -89,19 +85,18 @@
   (->>
     (slurp "day04.txt")
     string/trim
-    (string/split "\n\n")
-    (map |(as-> $ x
-                (peg/match passport-grammar x)
-                (when x (struct (splice x)))))))
+    (string/split "\n\n")))
 
 (def part1-answer
-  (count validate-lax part1-input))
+  (->> (mapcat |(peg/match passport-grammar $) part1-input)
+       (count validate)))
 
 (print part1-answer " valid documents")
 
 # Part 2
 
 (def part2-answer
-  (count validate-strict part1-input))
+  (->> (mapcat |(peg/match passport-grammar-strict $) part1-input)
+       (count validate)))
 
 (print part2-answer " valid documents")
