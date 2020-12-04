@@ -1,18 +1,18 @@
 (import spork/misc :as spork)
 
 (defn check-byr [s]
-  (<= 1920 (scan-number s) 2002))
+  (and (<= 1920 (scan-number s) 2002) s))
 
 (defn check-iyr [s]
-  (<= 2010 (scan-number s) 2020))
+  (and (<= 2010 (scan-number s) 2020) s))
 
 (defn check-eyr [s]
-  (<= 2020 (scan-number s) 2030))
+  (and (<= 2020 (scan-number s) 2030) s))
 
 (defn check-hgt [s-h s-u]
   (case s-u
-    "cm" (<= 150 (scan-number s-h) 193)
-    "in" (<= 59 (scan-number s-h) 76)))
+    "cm" (and (<= 150 (scan-number s-h) 193) [s-h s-u])
+    "in" (and (<= 59 (scan-number s-h) 76) [s-h s-u])))
 
 (def passport-grammar-strict
   (peg/compile
