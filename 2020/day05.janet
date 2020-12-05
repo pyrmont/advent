@@ -55,8 +55,7 @@
        (string/split "\n")))
 
 (def part1-ids
-  (->> (map find-details part1-input)
-       (map last)))
+  (map (comp last find-details) part1-input))
 
 (def part1-answer
   (apply max part1-ids))
