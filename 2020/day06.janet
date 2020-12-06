@@ -54,8 +54,9 @@
     (string/split "\n\n")))
 
 (def example2-answer
-  (->> (map count-any-answers example2)
-       (reduce + 0)))
+  (reduce (fn [total item]
+            (+ total (count-any-answers item)))
+          0 example2))
 
 (print "Example 2: " example2-answer " answers")
 
@@ -65,8 +66,9 @@
 (print "Example 3: " example3-answer " answers")
 
 (def example4-answer
-  (->> (map count-every-answers example2)
-       (reduce + 0)))
+  (reduce (fn [total item]
+            (+ total (count-every-answers item)))
+          0 example2))
 
 (print "Example 4: " example4-answer " answers")
 
@@ -78,15 +80,17 @@
        (string/split "\n\n")))
 
 (def part1-answer
-  (->> (map count-any-answers part1-input)
-       (reduce + 0)))
+  (reduce (fn [total item]
+            (+ total (count-any-answers item)))
+          0 part1-input))
 
 (print "Part 1: " part1-answer " answers")
 
 # Part 2
 
 (def part2-answer
-  (->> (map count-every-answers part1-input)
-       (reduce + 0)))
+  (reduce (fn [total item]
+            (+ total (count-every-answers item)))
+          0 part1-input))
 
 (print "Part 2: " part2-answer " answers")
