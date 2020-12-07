@@ -77,8 +77,12 @@
 (def example1-answer
   (count-outer-bags "shiny gold" example))
 
+(print example1-answer " bags")
+
 (def example2-answer
   (count-inner-bags "shiny gold" example))
+
+(print example2-answer " bags")
 
 # Part 1
 
@@ -88,7 +92,11 @@
 (def part1-answer
   (count-outer-bags "shiny gold" part1-input))
 
+(print part1-answer " bags")
+
 # Part 2
 
 (def part2-answer
   (count-inner-bags "shiny gold" part1-input))
+
+(print part2-answer " bags")
