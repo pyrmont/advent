@@ -1,6 +1,6 @@
 (import spork/misc :as spork)
 
-(defn grammar [arranging-fn]
+(defn make-grammar [arranging-fn]
   ~{:ws " "
     :quantity (* (/ (<- :d+) ,scan-number) :ws)
     :modifier :w+
@@ -12,6 +12,8 @@
     :inner-bag (+ (* :quantity :quality :bags) "no other bags")
     :inner-bags (group (* :inner-bag (any (* ", " :inner-bag))))
     :main (/ (some (* :outer-bags :contain :inner-bags "." (? "\n"))) ,arranging-fn)})
+
+# Functions for outside counting
 
 (defn arrange-by-inner [& bags]
   (def res @{})
@@ -31,11 +33,13 @@
   results)
 
 (defn count-outer-bags [bag rules]
-  (->> (peg/match (grammar arrange-by-inner) rules)
+  (->> (peg/match (make-grammar arrange-by-inner) rules)
        first
        (list-outer-bags @{} bag)
        keys
        length))
+
+# Functions for inside counting
 
 (defn arrange-by-outer [& bags]
   (apply struct bags))
@@ -49,7 +53,7 @@
   res)
 
 (defn count-inner-bags [bag rules]
-  (->> (peg/match (grammar arrange-by-outer) rules)
+  (->> (peg/match (make-grammar arrange-by-outer) rules)
        first
        (count-inner-bags* bag)))
 
