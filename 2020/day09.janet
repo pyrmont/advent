@@ -2,15 +2,14 @@
 
 (defn sum-of-any-previous-pair? [target candidates]
   (def num-candidates (length candidates))
-  (var sum? false)
+  (var sum-found? false)
   (loop [i :range [0 num-candidates]
-           :until sum?]
+           :until sum-found?]
     (loop [j :range [i num-candidates]
-             :until sum?]
+             :until sum-found?]
       (when (= target (+ (candidates i) (candidates j)))
-        # (print "= " target " " (+ (candidates i) (candidates j)))
-        (set sum? true))))
-  sum?)
+        (set sum-found? true))))
+  sum-found?)
 
 (defn find-invalid [numbers window-size]
   (var val nil)
