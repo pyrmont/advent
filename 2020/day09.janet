@@ -37,7 +37,7 @@
           (> total target) (++ back)))))
   candidates)
 
-(defn find-contiguous-set [target numbers]
+(defn find-weaknesses [target numbers]
   (->> (crawl-search target numbers)
        (map (fn [[back front]]
               (def spread (array/slice numbers back front))
@@ -79,7 +79,7 @@
 (print "The first invalid number is " example1-answer)
 
 (def example2-answer
-  (->> (find-contiguous-set example1-answer example)
+  (->> (find-weaknesses example1-answer example)
        (apply max)))
 
 (print "The encryption weakness is " example2-answer)
@@ -100,7 +100,7 @@
 # Part 2
 
 (def part2-answer
-  (->> (find-contiguous-set part1-answer part1-input)
+  (->> (find-weaknesses part1-answer part1-input)
        (apply max)))
 
 (print "The encryption weakness is " part2-answer)
