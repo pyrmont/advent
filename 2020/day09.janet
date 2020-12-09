@@ -11,7 +11,7 @@
         (set sum-found? true))))
   sum-found?)
 
-(defn find-invalid [numbers window-size]
+(defn find-first-invalid [numbers window-size]
   (var val nil)
   (loop [i :range [window-size (length numbers)]
            :until val]
@@ -21,27 +21,22 @@
       (set val (numbers i))))
   val)
 
-(defn crawl-search [target numbers]
+(defn find-contiguous-sets [target numbers]
   (def num-numbers (length numbers))
-  (var candidates @[])
+  (var res @[])
   (var back 0)
   (var front 0)
   (while (< back num-numbers)
     (if (< (- front back) 2)
       (if (= front num-numbers) (++ back) (++ front))
-      (let [total (+ ;(array/slice numbers back front))]
+      (let [spread (array/slice numbers back front)
+            total  (apply + spread)]
         (cond
-          (= total target) (do (array/push candidates [back front])
+          (= total target) (do (array/push res spread)
                                (++ back))
           (< total target) (if (= front num-numbers) (++ back) (++ front))
           (> total target) (++ back)))))
-  candidates)
-
-(defn find-weaknesses [target numbers]
-  (->> (crawl-search target numbers)
-       (map (fn [[back front]]
-              (def spread (array/slice numbers back front))
-              (+ (min ;spread) (max ;spread))))))
+  res)
 
 # Example
 
@@ -74,12 +69,13 @@
     (map scan-number)))
 
 (def example1-answer
-  (find-invalid example 5))
+  (find-first-invalid example 5))
 
 (print "The first invalid number is " example1-answer)
 
 (def example2-answer
-  (->> (find-weaknesses example1-answer example)
+  (->> (find-contiguous-sets example1-answer example)
+       (map |(+ (apply min $) (apply max $)))
        (apply max)))
 
 (print "The encryption weakness is " example2-answer)
@@ -93,14 +89,15 @@
        (map scan-number)))
 
 (def part1-answer
-  (find-invalid part1-input 25))
+  (find-first-invalid part1-input 25))
 
 (print "The first invalid number is " part1-answer)
 
 # Part 2
 
 (def part2-answer
-  (->> (find-weaknesses part1-answer part1-input)
+  (->> (find-contiguous-sets part1-answer part1-input)
+       (map |(+ (apply min $) (apply max $)))
        (apply max)))
 
 (print "The encryption weakness is " part2-answer)
