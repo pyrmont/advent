@@ -124,7 +124,7 @@
   (let [diffs (tally-differences part1-input)]
     (* (diffs 1) (diffs 3))))
 
-(print "The multiplation of 1-jolt and 3-jolt differences is " part1-answer)
+(print "The multiplication of 1-jolt and 3-jolt differences is " part1-answer)
 
 # Part 2
 
