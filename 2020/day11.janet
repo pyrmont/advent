@@ -1,8 +1,6 @@
 (import spork/misc :as spork)
 
-(def NL 10)
 (def EMPTY 76)
-(def FLOOR 46)
 (def TAKEN 35)
 
 (def example
@@ -82,48 +80,28 @@
       (put-in res [row col] seat)))
   res)
 
-# (defn simulate-selection [plan steps]
-#   (var res plan)
-#   (loop [i :range [0 steps]]
-#     (case (% i 2)
-#       0 (set res (take-seats res))
-#       1 (set res (leave-seats res))))
-#   res)
-
-# (def step1 (take-seats (example 0)))
-# (deep= step1 (example 1))
-# (def step2 (leave-seats step1))
-# (deep= step2 (example 2))
-# (def step3 (take-seats step2))
-# (deep= step3 (example 3))
-
-# (def step1 (simulate-selection (example 0) 1))
-# (deep= step1 (example 1))
-# (def step2 (simulate-selection (example 0) 2))
-# (deep= step2 (example 2))
-# (def step3 (simulate-selection (example 0) 3))
-# (deep= step3 (example 3))
-# (def step4 (simulate-selection (example 0) 4))
-# (deep= step4 (example 4))
-
 (defn find-equilibrium [plan in-view? tolerance]
   (var curr plan)
   (var prev nil)
-  (var i 0)
+  (var take? true)
   (while (not (deep= curr prev))
     (set prev curr)
-    (if (zero? (% i 2))
+    (if take?
       (set curr (take-seats curr in-view?))
       (set curr (leave-seats curr in-view? tolerance)))
-    (++ i))
+    (set take? (not take?)))
   curr)
 
-(def example-answer
+# Example
+
+(def example1-answer
   (->> (find-equilibrium (example 0) false 4)
        (map (fn [row]
               (count (fn [seat] (= seat TAKEN))
                      row)))
        (reduce + 0)))
+
+(print "The number of occupied seats is " example1-answer)
 
 (def example2-answer
   (->> (find-equilibrium (example 0) true 5)
@@ -131,6 +109,8 @@
               (count (fn [seat] (= seat TAKEN))
                      row)))
        (reduce + 0)))
+
+(print "The number of occupied seats is " example2-answer)
 
 # Part 1
 
@@ -147,9 +127,15 @@
                      row)))
        (reduce + 0)))
 
+(print "The number of occupied seats is " part1-answer)
+
+# # Part 2
+
 (def part2-answer
   (->> (find-equilibrium part1-input true 5)
        (map (fn [row]
               (count (fn [seat] (= seat TAKEN))
                      row)))
        (reduce + 0)))
+
+(print "The number of occupied seats is " part2-answer)
