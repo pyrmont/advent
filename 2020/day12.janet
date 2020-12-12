@@ -66,7 +66,7 @@
     +3 [(* -1 y) x]
     -3 [y (* -1 x)]))
 
-(defn execute-with-waypoint [steps ort]
+(defn execute-with-waypoint [steps]
   (var coords [0 0])
   (var waypoint [10 1])
   (each [dir num] (partition 2 steps)
@@ -75,7 +75,7 @@
       :L (set waypoint (rotate-waypoint waypoint (* -1 num)))
       :R (set waypoint (rotate-waypoint waypoint num))
       (set waypoint (move-waypoint waypoint dir num))))
-  [coords ort])
+  coords)
 
 (defn calc-manhattan [coords]
   (def [x y] coords)
@@ -103,8 +103,7 @@
 (print "The Manhattan distance is " example-answer1)
 
 (def example-answer2
-  (-> (execute-with-waypoint example :E)
-      first
+  (-> (execute-with-waypoint example)
       calc-manhattan))
 
 (print "The Manhattan distance is " example-answer2)
@@ -126,8 +125,7 @@
 # Part 2
 
 (def part2-answer
-  (-> (execute-with-waypoint part1-input :E)
-      first
+  (-> (execute-with-waypoint part1-input)
       calc-manhattan))
 
 (print "The Manhattan distance is " part2-answer)
