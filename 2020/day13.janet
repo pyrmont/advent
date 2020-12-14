@@ -25,6 +25,23 @@
   (def next-ones (get-next-ones start buses))
   (first (sort-by |(get $ 1) next-ones)))
 
+(defn get-buses-and-offsets [input]
+  (def ordering (peg/match grammar-2 input))
+  (def buses @[])
+  (loop [i :range [0 (length ordering)]
+           :when (not= :any (ordering i))]
+    (array/push buses [(ordering i) i]))
+  buses)
+
+(defn get-ts [buses-and-offsets]
+  (var ts 0)
+  (var step 1)
+  (loop [[bus offset] :in buses-and-offsets]
+    (while (not (zero? (% (+ ts offset) bus)))
+      (+= ts step))
+    (*= step bus))
+  ts)
+
 # Example
 
 (def example
@@ -35,12 +52,12 @@
     ```
     spork/dedent))
 
-(def example-answer
+(def example-answer1
   (let [[start buses] (peg/match grammar-1 example)
         [bus arrival] (get-best-bus start buses)]
     (* bus (- arrival start))))
 
-(print "The ID multiplied by the minutes to wait is " example-answer)
+(print "The ID multiplied by the minutes to wait is " example-answer1)
 
 # Part 1
 
@@ -53,3 +70,22 @@
     (* bus (- arrival start))))
 
 (print "The ID multiplied by the minutes to wait is " part1-answer)
+
+# Part 2
+
+(def example-answer2
+  (->> (string/split "\n" example)
+       last
+       get-buses-and-offsets
+       get-ts))
+
+(print "The timestamp that meets the requirements is " example-answer2)
+
+(def part2-answer
+  (->> (string/trim part1-input)
+       (string/split "\n")
+       last
+       get-buses-and-offsets
+       get-ts))
+
+(print "The timestamp that meets the requirements is " part2-answer)
