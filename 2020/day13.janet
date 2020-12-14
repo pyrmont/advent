@@ -62,7 +62,8 @@
 # Part 1
 
 (def part1-input
-  (slurp "day13.txt"))
+  (-> (slurp "day13.txt")
+      string/trim))
 
 (def part1-answer
   (let [[start buses] (peg/match grammar-1 part1-input)
@@ -82,8 +83,7 @@
 (print "The timestamp that meets the requirements is " example-answer2)
 
 (def part2-answer
-  (->> (string/trim part1-input)
-       (string/split "\n")
+  (->> (string/split "\n" part1-input)
        last
        get-buses-and-offsets
        get-ts))
