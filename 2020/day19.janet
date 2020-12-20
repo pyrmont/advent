@@ -107,7 +107,10 @@
   (let [res @{}]
     (each [k v] (pairs part1-grammar)
       (case k
-        :0 (put res k ~(* (at-least 2 :42) (some :31)))
+        :0 (put res k
+                ~(drop (cmt (* (<- (at-least 2 :42))
+                               (<- (some :31)))
+                            ,(fn [x y] (< (length y) (length x))))))
         (put res k v)))
     (table/to-struct res)))
 
