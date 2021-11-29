@@ -16,7 +16,7 @@
   (loop [i :range [0 height]]
     (buffer/push-byte left (get-in lines [i 0]))
     (buffer/push-byte right (get-in lines [i limit])))
-  [top bottom (string left) (string right)])
+  [top (string left) bottom (string right)])
 
 (defn get-candidates [tiles]
   (def res @{})
@@ -57,16 +57,43 @@
 
 (print "The product of the corner IDs is " example-answer)
 
-# # Part 1
+(defn arrange-tiles [total side-len candidates corners image]
+  (if (= total (length image))
+    image
+    (if (zero? (length image))
+      (var stop? false)
+      (def corner (first corners))
+      (loop [i :range [0 4]
+                    :let [corner      (corner-id   (get corner 0))
+                          corner-side (get-in corner [1 1])
+                          new-image   (array/push @[] [corner-id corner-side])]
+                    :until stop?]
+        (when (arrange-tiles total side-len candidates corners new-image)
+          (set stop? true)))
+      image
+      (if-let [prev-tile (array/peek image)
+               curr-tile (get-next-tile side-len candidates prev-tile)
+               new-image (array/push image curr-tile)]
+        (arrange-tiles total side-len candidates corners new-image)
+        nil))))
 
-(def part1-input
-  (->> (slurp "day20.txt")
-       (peg/match grammar)
-       (apply struct)))
 
-(def part1-answer
-  (->> (get-candidates part1-input)
-       get-corners
-       (reduce |(* $0 ($1 0)) 1)))
+(def example-answer2
+  (let [candidates (get-candidates example)
+        corners    (get-corners candidates)]
+        # image      (arrange-tiles 9 3 candidates corners @[])]
+    corners))
 
-(print "The product of the corner IDs is " part1-answer)
+# Part 1
+
+# (def part1-input
+#   (->> (slurp "day20.txt")
+#        (peg/match grammar)
+#        (apply struct)))
+
+# (def part1-answer
+#   (->> (get-candidates part1-input)
+#        get-corners
+#        (reduce |(* $0 ($1 0)) 1)))
+
+# (print "The product of the corner IDs is " part1-answer)
