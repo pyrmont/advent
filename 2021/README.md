@@ -26,7 +26,7 @@ $ jeep dev-deps
 Start the netrepl server:
 
 ```shell
-$ jeep netrepl --format "%.20m"
+$ jeep netrepl
 ```
 
 ## Miscellaneous
