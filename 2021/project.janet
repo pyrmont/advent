@@ -5,6 +5,6 @@
   :license "MIT"
   :url "https://github.com/pyrmont/advent/2021"
   :repo "git+https://github.com/pyrmont/advent"
-  :dependencies []
-  :jpm/tree "modules")
+  :dependencies ["https://github.com/janet-lang/spork"]
+  :jeep/tree "modules")
 
