@@ -49,7 +49,6 @@
 (print "The depth in part 1 is " z)
 (print "Multiplying these together produces " (* x z))
 
-
 # Example 2
 
 (set x 0)
