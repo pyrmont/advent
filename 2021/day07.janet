@@ -11,12 +11,12 @@
 
 # Functions
 
+(defn middle [points]
+  (get points (/ (length points) 2)))
+
 (defn fuel-used [start end]
   (def w (math/abs (- start end)))
   (/ (* w (+ w 1)) 2))
-
-(defn middle [points]
-  (get points (/ (length points) 2)))
 
 (defn total-fuel [origin points]
   (->> (map |(fuel-used $ origin) points)
