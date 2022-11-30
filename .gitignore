@@ -1,6 +1,14 @@
-.rebel_readline_history
-.conjure.edn
-.cpcache
-aocdl
+# AOC
 .aocdlconfig
+aocdl
+
+# Conjure
+.conjure.edn
+
+# Clojure
+.cpcache
+.nrepl-port
+.rebel_readline_history
+
+# Janet
 modules
