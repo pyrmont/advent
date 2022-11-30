@@ -3,7 +3,7 @@
     org.clojure/clojure {:mvn/version "1.11.1"}
   }
 
-	:aliases {
+  :aliases {
     :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "1.0.0"}}
             :main-opts ["-m" "nrepl.cmdline"]}
   }
