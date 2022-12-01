@@ -32,7 +32,7 @@
 (defn group-and-sum [input]
   (->> input
        (map #(if (= "" %) nil (Integer/parseInt %)))
-       (partition-by #(nil? %))
+       (partition-by nil?)
        (filter #(not= '(nil) %))
        (map #(apply + %))))
 
@@ -47,7 +47,7 @@
 
 ;; Example
 
-(part1 (util/trim-input eg1-input 2))
+(part1 (util/trim-input eg-input 2))
 
 
 ;; Answer
@@ -68,7 +68,7 @@
 
 ;; Example
 
-(part2 (util/trim-input eg1-input 2))
+(part2 (util/trim-input eg-input 2))
 
 
 ;; Answer
