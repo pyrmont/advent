@@ -15,5 +15,5 @@
    (->> (str/replace s #"^\n|\n$" "")
         (str/split-lines)))
   ([s n]
-   (->> (trim s)
+   (->> (trim-input s)
         (map #(dedent % n)))))
