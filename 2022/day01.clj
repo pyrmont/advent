@@ -1,7 +1,6 @@
 (ns day01
   (:require [utilities :as util]))
 
-
 ;;;;;;;;;;;;;;;;;;;;
 ;; Example Input
 ;;;;;;;;;;;;;;;;;;;;
@@ -24,7 +23,6 @@
   10000
   ")
 
-
 ;;;;;;;;;;;;;;;;;;;;
 ;; Common Functions
 ;;;;;;;;;;;;;;;;;;;;
@@ -36,7 +34,6 @@
        (filter #(not= '(nil) %))
        (map #(apply + %))))
 
-
 ;;;;;;;;;;;;;;;;;;;;
 ;; Part 1
 ;;;;;;;;;;;;;;;;;;;;
@@ -44,16 +41,13 @@
 (defn part1 [input]
   (apply max (group-and-sum input)))
 
-
 ;; Example
 
-(part1 (util/trim-input eg-input 2))
-
+(part1 (util/trim-input eg-input 2)) ; 24000
 
 ;; Answer
 
-(part1 (util/trim-input (slurp "day01.input")))
-
+(part1 (util/trim-input (slurp "day01.input"))) ; 72017
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Part 2
@@ -65,12 +59,10 @@
        (take 3)
        (apply +)))
 
-
 ;; Example
 
-(part2 (util/trim-input eg-input 2))
-
+(part2 (util/trim-input eg-input 2)) ; 45000
 
 ;; Answer
 
-(part2 (util/trim-input (slurp "day01.input")))
+(part2 (util/trim-input (slurp "day01.input"))) ; 212520
