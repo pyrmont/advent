@@ -43,11 +43,11 @@
 
 ;; Example
 
-(part1 (util/trim-input eg-input 2)) ; 24000
+(part1 (util/trim-split eg-input 2)) ; 24000
 
 ;; Answer
 
-(part1 (util/trim-input (slurp "day01.input"))) ; 72017
+(part1 (util/trim-split (slurp "day01.input"))) ; 72017
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Part 2
@@ -61,8 +61,8 @@
 
 ;; Example
 
-(part2 (util/trim-input eg-input 2)) ; 45000
+(part2 (util/trim-split eg-input 2)) ; 45000
 
 ;; Answer
 
-(part2 (util/trim-input (slurp "day01.input"))) ; 212520
+(part2 (util/trim-split (slurp "day01.input"))) ; 212520
