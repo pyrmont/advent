@@ -1,6 +1,6 @@
-# Raw Data
+# Input
 
-(def ex1-raw
+(def ex-raw
   ```
   3   4
   4   3
@@ -38,14 +38,25 @@
                     (+ acc (math/abs (- a b))))
                0)))
 
+(defn answer-2 [data]
+  (def list-1 (get data 0))
+  (def counts-2 (frequencies (get data 1)))
+  (reduce (fn [acc i]
+            (+ acc (* i (or (counts-2 i) 0))))
+          0
+          list-1))
+
 # Answers
 
-(def ex1-data (separate ex1-raw))
-(def ex1-answer (answer-1 ex1-data))
+(def ex-data (separate ex-raw))
+(def ex-answer-1 (answer-1 ex-data))
+(def ex-answer-2 (answer-2 ex-data))
 
 (def real-data (separate real-raw))
 (def real-answer-1 (answer-1 real-data))
+(def real-answer-2 (answer-2 real-data))
 
 # Output
 
 (print "Part 1 is " real-answer-1)
+(print "Part 2 is " real-answer-2)
