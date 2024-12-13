@@ -15,9 +15,9 @@
 # Functions
 
 (defn interpret [s]
-  (->> (peg/match ~(some (group (* (some (* (/ ':d+ ,scan-number) (some " ")))
+  (peg/match ~(some (group (* (some (* (/ ':d+ ,scan-number) (some " ")))
                                    (* (/ ':d+ ,scan-number) (+ "\n" -1)))))
-                  s)))
+             s))
 
 (defn answer-1 [data]
   (var safes 0)
