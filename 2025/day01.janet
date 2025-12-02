@@ -35,21 +35,45 @@
           (++ total)
           (break))
         (< pos 0)
-        (do
-          # (++ total)
-          (set pos (+ 100 pos)))
+        (set pos (+ 100 pos))
         (> pos 99)
-        (do
-          # (++ total)
-          (set pos (- pos 100)))
+        (set pos (- pos 100))
         # default
         (break))))
   total)
 
+(defn answer2
+  [turns]
+  (var total 0)
+  (var pos 50)
+  (each [dir clicks] turns
+    (+= total (math/floor (/ clicks 100)))
+    (case dir
+      "L"
+      (do
+        (set pos (if (zero? pos) 100 pos))
+        (set pos (- pos (% clicks 100))))
+      "R"
+      (set pos (+ pos (% clicks 100))))
+    (cond
+      (zero? pos)
+      (++ total)
+      (< pos 0)
+      (do
+        (++ total)
+        (set pos (+ 100 pos)))
+      (> pos 99)
+      (do
+        (++ total)
+        (set pos (- pos 100)))))
+  total)
+
 (def ex-input (interpret ex-raw))
 (def ex-answer1 (answer1 ex-input))
+(def ex-answer2 (answer2 ex-input))
 
-(def input-raw (slurp "day01.input"))
+(def real-raw (slurp "day01.input"))
 
-(def part1-input (interpret input-raw))
-(def part1-answer1 (answer1 part1-input))
+(def real-input (interpret real-raw))
+(def real-answer1 (answer1 real-input))
+(def real-answer2 (answer2 real-input))
