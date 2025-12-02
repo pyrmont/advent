@@ -76,14 +76,31 @@
           0
           res))
 
+(defn answer-2 [data]
+  (def res @[])
+  (def [rules updates] data)
+  (def before? (make-sort rules))
+  (each list updates
+    (def correct (sorted list before?))
+    (unless (deep= list correct)
+      (array/push res correct)))
+  (reduce (fn [acc x]
+            (def i (math/floor (/ (length x) 2)))
+            (+ acc (get x i)))
+          0
+          res))
+
 # Answers
 
 (def ex-data (interpret ex-raw))
 (def ex-answer-1 (answer-1 ex-data))
+(def ex-answer-2 (answer-2 ex-data))
 
 (def real-data (interpret real-raw))
 (def real-answer-1 (answer-1 real-data))
+(def real-answer-2 (answer-2 real-data))
 
 # Output
 
 (print "Part 1 is " real-answer-1)
+(print "Part 2 is " real-answer-2)
