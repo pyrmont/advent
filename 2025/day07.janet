@@ -54,10 +54,39 @@
         (array/push beams b))))
   splits)
 
+(defn count-paths
+  [row col splitters max-row memo]
+  (if (> row max-row)
+    1  # Reached the end, this is one complete path
+    (do
+      (def key [row col])
+      (if (def cached (get memo key))
+        cached
+        (do
+          (def is-splitter (find (fn [x] (and (= row (get x 0)) (= col (get x 1)))) splitters))
+          (def result
+            (if is-splitter
+              (+ (count-paths (inc row) (dec col) splitters max-row memo)
+                 (count-paths (inc row) (inc col) splitters max-row memo))
+              (count-paths (inc row) col splitters max-row memo)))
+          (put memo key result)
+          result)))))
+
+(defn answer2
+  [input]
+  (def diagram (first input))
+  (def start (diagram :entry))
+  (def splitters (diagram :splitters))
+  (def max-row (diagram :lines))
+  (def memo @{})
+  (count-paths (get start 0) (get start 1) splitters max-row memo))
+
 (def ex-input (interpret ex-raw))
 (def ex-answer1 (answer1 ex-input))
+(def ex-answer2 (answer2 ex-input))
 
 (def real-raw (slurp "day07.input"))
 
 (def real-input (interpret real-raw))
 (def real-answer1 (answer1 real-input))
+(def real-answer2 (answer2 real-input))
