@@ -111,9 +111,41 @@
   # Multiply the three largest
   (* (sizes 0) (sizes 1) (sizes 2)))
 
+(defn answer2
+  [boxes]
+  (def n (length boxes))
+  # Calculate all pairwise distances
+  (def edges @[])
+  (loop [i :range [0 n]
+         j :range [(inc i) n]]
+    (def dist (distance (boxes i) (boxes j)))
+    (array/push edges [dist i j]))
+  # Sort edges by distance
+  (sort-by first edges)
+  # Create Union-Find structure
+  (def uf (make-union-find n))
+  # Connect pairs until all are in one circuit
+  (var last-connection nil)
+  (each [dist i j] edges
+    (when (union uf i j)
+      # Only record connections that actually merged two different sets
+      (set last-connection [i j])
+      # Check if all boxes are in one circuit
+      (def root (find-root uf 0))
+      (when (= (get-in uf [:size root]) n)
+        (break))))
+  # Get the X coordinates of the last connection
+  (def [i j] last-connection)
+  (def x1 (get-in boxes [i 0]))
+  (def x2 (get-in boxes [j 0]))
+  (* x1 x2))
+
 (def ex-input (interpret ex-raw))
 (def ex-answer1 (answer1 ex-input 10))
+(def ex-answer2 (answer2 ex-input))
 
 (def real-raw (slurp "day08.input"))
+
 (def real-input (interpret real-raw))
 (def real-answer1 (answer1 real-input 1000))
+(def real-answer2 (answer2 real-input))
